@@ -5,7 +5,8 @@ import { Input, NativeBaseProvider, Button, Icon, Box, Image, AspectRatio ,Scrol
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
-import {UserAction} from "../presenter/Reducer/user/action";
+import {UserAction} from "../../presenter/Reducer/user/action";
+import { styles } from '../../css/AuthStyles';
 
 
 function Signup() {
@@ -24,7 +25,8 @@ function Signup() {
     const [confirmPassword, setConfirmPassword] = useState('12345@abcd');
 
     const onSubmit = async => {
-
+      // navigation.navigate("Verification", { email: email,'otp' : '12345' });
+      // return;
       setNameError('');
       setEmailError('');
       setPasswordError('');
@@ -58,11 +60,12 @@ function Signup() {
          "password" : password 
         })).then((response) => {
         if(response.res_code == '001'){
+          navigation.navigate("Verification", { email: email,'otp': response.otp });
           setApiError(`${response.res_code}`); 
         }else{
           setApiError(`${response.response}`);
         }
-        console.log(`MY_Responce:: ${response}`);
+        console.log(`MY_Responce:: ${response.response}`);
       });
   };
 
@@ -240,7 +243,7 @@ function Signup() {
       </View>
       <View style={styles.text2}>
         <Text>Already have account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Login")} ><Text style={styles.signupText}> Login </Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.replace("Login")} ><Text style={styles.signupText}> Login </Text></TouchableOpacity>
       </View>
 
       <View style={styles.space}></View>
@@ -250,18 +253,6 @@ function Signup() {
   );
 }
 
-// After successful login
-const saveSignupData = async (token,navigation) => {
-  try {
-    await AsyncStorage.setItem('token', token);
-    // Any other data you want to store
-    console.log('Login data saved successfully');
-    navigation.navigate('Home');
-  } catch (error) {
-    console.log('Error saving login data:', error);
-  }
-};
-
 export default () => {
   return (
     <NativeBaseProvider>
@@ -269,76 +260,3 @@ export default () => {
     </NativeBaseProvider>
   )
 }
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  LoginText: {
-    marginTop:100,
-    fontSize:30,
-    fontWeight:'bold',
-  },
-  Middle:{
-    alignItems:'center',
-    justifyContent:'center',
-  },
-  text2:{
-    flexDirection:'row',
-    justifyContent:'center',
-    paddingTop:5
-  },
-  signupText:{
-    fontWeight:'bold'
-  },
-  emailField:{
-    marginTop:30,
-    marginLeft:15
-  },
-  emailInput:{
-    marginTop:10,
-    marginRight:5
-  },
-  buttonStyle:{
-    marginTop:30,
-    marginLeft:15,
-    marginRight:15
-  },
-  buttonStyleX:{
-    marginTop:12,
-    marginLeft:15,
-    marginRight:15
-  },
-  buttonDesign:{
-    backgroundColor:'#026efd'
-  },
-  lineStyle:{
-    flexDirection:'row',
-    marginTop:30,
-    marginLeft:15,
-    marginRight:15,
-    alignItems:'center'
-  },
-  imageStyle:{
-    width:80,
-    height:80,
-    marginLeft:20,
-  },
-  boxStyle:{
-    flexDirection:'row',
-    marginTop:30,
-    marginLeft:15,
-    marginRight:15,
-    justifyContent:'space-around'
-  },
-  space: {
-    height: 20, // Add desired space height
-  },
-  errorText: {
-    color: 'red',
-    fontSize: 14,
-    marginTop: 5,
-  },
-});

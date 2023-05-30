@@ -13,7 +13,7 @@ try {
 } catch (error) {
   console.error('Error retrieving login data:', error);
   return null;
-}
+ }
 }
 
 
@@ -32,17 +32,6 @@ const Home = () => {
     };
     fetchData();
   }, []);
-
-  const getMoviesFromApi = () => {
-    fetch('https://reactnative.dev/movies.json')
-      .then((response) => response.json())
-      .then((json) => {
-        setData(json.movies);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
 
   const navigation = useNavigation();
 

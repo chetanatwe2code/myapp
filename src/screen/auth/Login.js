@@ -6,8 +6,10 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import {UserAction} from "../presenter/Reducer/user/action";
+import {UserAction} from "../../presenter/Reducer/user/action";
 import {useDispatch, useSelector} from 'react-redux';
+import { CommonActions } from '@react-navigation/native';
+import { styles } from '../../css/AuthStyles';
 
 function Login() {
     const dispatch = useDispatch();
@@ -19,8 +21,8 @@ function Login() {
 
    
 
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [username, setUsername] = useState('chetan.barod.we2code@gmail.com');
+    const [password, setPassword] = useState('12345@abcd');
 
     const onSubmit = async => {
 
@@ -60,6 +62,7 @@ function Login() {
         
         <View style={styles.emailInput}>
           <Input
+          value={username}
            onChangeText={(text) => setUsername(text)}
             InputLeftElement={
               <Icon
@@ -94,6 +97,7 @@ function Login() {
         
         <View style={styles.emailInput}>
           <Input
+          value={password}
             onChangeText={(text) => setPassword(text)}
             InputLeftElement={
               <Icon
@@ -152,7 +156,7 @@ function Login() {
 
       <View style={styles.text2}>
         <Text>Don't have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Signup")} ><Text style={styles.signupText}> Sign up</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.replace("Signup")} ><Text style={styles.signupText}> Sign up</Text></TouchableOpacity>
       </View>
 
     </View>
@@ -165,7 +169,15 @@ const saveLoginData = async (token,navigation) => {
     await AsyncStorage.setItem('token', token);
     // Any other data you want to store
     console.log('Login data saved successfully');
-    navigation.navigate('Home');
+    //navigation.navigate('Home');
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          { name: 'Home' },
+        ],
+      })
+    );
   } catch (error) {
     console.log('Error saving login data:', error);
   }
@@ -181,74 +193,74 @@ export default () => {
 }
 
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  LoginText: {
-    marginTop:100,
-    fontSize:30,
-    fontWeight:'bold',
-  },
-  Middle:{
-    alignItems:'center',
-    justifyContent:'center',
-  },
-  text2:{
-    flexDirection:'row',
-    justifyContent:'center',
-    paddingTop:5
-  },
-  signupText:{
-    fontWeight:'bold'
-  },
-  emailField:{
-    marginTop:30,
-    marginLeft:15
-  },
-  emailInput:{
-    marginTop:10,
-    marginRight:5
-  },
-  buttonStyle:{
-    marginTop:30,
-    marginLeft:15,
-    marginRight:15
-  },
-  buttonStyleX:{
-    marginTop:12,
-    marginLeft:15,
-    marginRight:15
-  },
-  buttonDesign:{
-    backgroundColor:'#026efd'
-  },
-  lineStyle:{
-    flexDirection:'row',
-    marginTop:30,
-    marginLeft:15,
-    marginRight:15,
-    alignItems:'center'
-  },
-  imageStyle:{
-    width:80,
-    height:80,
-    marginLeft:20,
-  },
-  boxStyle:{
-    flexDirection:'row',
-    marginTop:30,
-    marginLeft:15,
-    marginRight:15,
-    justifyContent:'space-around'
-  },
-  space: {
-    height: 20, // Add desired space height
-  },
-  errorText: {
-    color: 'red',
-    fontSize: 14,
-    marginTop: 5,
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#fff',
+//   },
+//   LoginText: {
+//     marginTop:100,
+//     fontSize:30,
+//     fontWeight:'bold',
+//   },
+//   Middle:{
+//     alignItems:'center',
+//     justifyContent:'center',
+//   },
+//   text2:{
+//     flexDirection:'row',
+//     justifyContent:'center',
+//     paddingTop:5
+//   },
+//   signupText:{
+//     fontWeight:'bold'
+//   },
+//   emailField:{
+//     marginTop:30,
+//     marginLeft:15
+//   },
+//   emailInput:{
+//     marginTop:10,
+//     marginRight:5
+//   },
+//   buttonStyle:{
+//     marginTop:30,
+//     marginLeft:15,
+//     marginRight:15
+//   },
+//   buttonStyleX:{
+//     marginTop:12,
+//     marginLeft:15,
+//     marginRight:15
+//   },
+//   buttonDesign:{
+//     backgroundColor:'#026efd'
+//   },
+//   lineStyle:{
+//     flexDirection:'row',
+//     marginTop:30,
+//     marginLeft:15,
+//     marginRight:15,
+//     alignItems:'center'
+//   },
+//   imageStyle:{
+//     width:80,
+//     height:80,
+//     marginLeft:20,
+//   },
+//   boxStyle:{
+//     flexDirection:'row',
+//     marginTop:30,
+//     marginLeft:15,
+//     marginRight:15,
+//     justifyContent:'space-around'
+//   },
+//   space: {
+//     height: 20, // Add desired space height
+//   },
+//   errorText: {
+//     color: 'red',
+//     fontSize: 14,
+//     marginTop: 5,
+//   },
+// });
