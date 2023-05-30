@@ -41,7 +41,7 @@ function Login() {
 
       dispatch(UserAction.signIn({ "email" : username , "password" : password })).then((response) => {
         if(response.res_code == '001'){
-          saveLoginData(response.token);
+          saveLoginData(response.token,navigation);
         }else{
           setApiError('Your login credentials do not match');
           console.log(`MY_Responce:: Your login credentials do not match`);
@@ -75,7 +75,7 @@ function Login() {
               />
             }
             variant="outline"
-            placeholder="Username or Email"
+            placeholder="Email"
             _light={{
               placeholderTextColor: "blueGray.400",
             }}
@@ -160,12 +160,12 @@ function Login() {
 }
 
 // After successful login
-const saveLoginData = async (token) => {
+const saveLoginData = async (token,navigation) => {
   try {
     await AsyncStorage.setItem('token', token);
     // Any other data you want to store
     console.log('Login data saved successfully');
-    useNavigation.navigate('Home');
+    navigation.navigate('Home');
   } catch (error) {
     console.log('Error saving login data:', error);
   }
@@ -175,9 +175,7 @@ const saveLoginData = async (token) => {
 export default () => {
   return (
     <NativeBaseProvider>
-     
         <Login />
-      
     </NativeBaseProvider>
   )
 }
