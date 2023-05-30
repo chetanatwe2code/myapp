@@ -41,7 +41,7 @@ function Login() {
 
       dispatch(UserAction.signIn({ "email" : username , "password" : password })).then((response) => {
         if(response.res_code == '001'){
-          console.log(`MY_token:: ${response.token}`);
+          saveLoginData(response.token);
         }else{
           setApiError('Your login credentials do not match');
           console.log(`MY_Responce:: Your login credentials do not match`);
@@ -132,8 +132,6 @@ function Login() {
       <View style={styles.buttonStyle}>
       <Button onPress={() => {
           onSubmit();
-          // saveLoginData("token_NO_01", "127"); // Replace token and userId with your actual login data
-          // navigation.navigate('Home');
         }} style={styles.buttonDesign}>
           LOGIN
         </Button>
@@ -162,12 +160,12 @@ function Login() {
 }
 
 // After successful login
-const saveLoginData = async (token, userId) => {
+const saveLoginData = async (token) => {
   try {
     await AsyncStorage.setItem('token', token);
-    await AsyncStorage.setItem('userId', userId);
     // Any other data you want to store
     console.log('Login data saved successfully');
+    useNavigation.navigate('Home');
   } catch (error) {
     console.log('Error saving login data:', error);
   }
