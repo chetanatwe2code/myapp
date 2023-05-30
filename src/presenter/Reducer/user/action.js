@@ -21,7 +21,7 @@ function signIn(body) {
         });
   
         const result = await response.json();
-        console.log(`MY_Responce_result:: ${result}`);
+        console.log(`MY_Responce_result:: ${result.res_code}`);
         dispatch(ResponseConstant(UserConstants.SIGNIN_SUCCESS, UserConstants.SIGNIN_FAILURE, result));
         return result;
 

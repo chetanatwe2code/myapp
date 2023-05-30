@@ -13,12 +13,39 @@ function Login() {
     const dispatch = useDispatch();
     const navigation = useNavigation();
 
+    const [usernameError, setUsernameError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const [apiError, setApiError] = useState('');
+
+   
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     const onSubmit = async => {
+
+      setUsernameError('');
+      setPasswordError('');
+      setApiError('');
+
+      // Validate the input fields
+    if (username.trim() === '') {
+      setUsernameError('Username or Email is required');
+      return;
+    }
+
+    if (password.trim() === '') {
+      setPasswordError('Password is required');
+      return;
+    }
+
       dispatch(UserAction.signIn({ "email" : username , "password" : password })).then((response) => {
-        console.log(`MY_Responce:: ${response}`);
+        if(response.res_code == '001'){
+          console.log(`MY_token:: ${response.token}`);
+        }else{
+          setApiError('Your login credentials do not match');
+          console.log(`MY_Responce:: Your login credentials do not match`);
+        }
       });
   };
 
@@ -58,6 +85,8 @@ function Login() {
 
           />
         </View>
+        {/* Display username error message */}
+        {usernameError !== '' && <Text style={styles.errorText}>{usernameError}</Text>}
       </View>
 
       {/* Password Input Field */}
@@ -90,7 +119,14 @@ function Login() {
             }}
           />
         </View>
+        {/* Display password error message */}
+        {passwordError !== '' && <Text style={styles.errorText}>{passwordError}</Text>}
       </View>
+
+      <View style={styles.space}></View>
+      <View style={styles.space}></View>
+
+      {apiError !== '' && <Text style={styles.errorText}>{apiError}</Text>}
 
       {/* Button */}
       <View style={styles.buttonStyle}>
@@ -213,5 +249,10 @@ const styles = StyleSheet.create({
   },
   space: {
     height: 20, // Add desired space height
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    marginTop: 5,
   },
 });
