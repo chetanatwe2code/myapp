@@ -1,4 +1,4 @@
-import { StyleSheet , Dimensions } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -8,62 +8,75 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+  loginContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  formContainer: {
+    width: '100%',
+    maxWidth: 400
+  },
   LoginText: {
-    marginTop:100,
-    fontSize:30,
-    fontWeight:'bold',
+    fontSize: 30,
+    fontWeight: 'bold',
   },
-  Middle:{
-    alignItems:'center',
-    justifyContent:'center',
+  Middle: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  text2:{
-    flexDirection:'row',
-    justifyContent:'center',
-    paddingTop:5
+  text2: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingTop: 5
   },
-  signupText:{
-    fontWeight:'bold'
+  signupText: {
+    fontWeight: 'bold'
   },
-  emailField:{
-    marginTop:30,
-    marginLeft:15
+  emailField: {
+    marginTop: 30,
+    marginLeft: 15
   },
-  emailInput:{
-    marginTop:10,
-    marginRight:5
+  emailInput: {
+    marginTop: 10,
+    marginRight: 5,
   },
-  buttonStyle:{
-    marginTop:30,
-    marginLeft:15,
-    marginRight:15
+  buttonStyle: {
+    marginTop: 10,
+    marginLeft: 15,
+    marginRight: 15
   },
-  buttonStyleX:{
-    marginTop:12,
-    marginLeft:15,
-    marginRight:15
+  buttonStyleX: {
+    marginTop: 12,
+    marginLeft: 15,
+    marginRight: 15
   },
-  buttonDesign:{
-    backgroundColor:'#026efd'
+  buttonDesign: {
+    backgroundColor: '#026efd'
   },
-  lineStyle:{
-    flexDirection:'row',
-    marginTop:30,
-    marginLeft:15,
-    marginRight:15,
-    alignItems:'center'
+  lineStyle: {
+    flexDirection: 'row',
+    marginTop: 30,
+    marginLeft: 15,
+    marginRight: 15,
+    alignItems: 'center'
   },
-  imageStyle:{
-    width:80,
-    height:80,
-    marginLeft:20,
+  imageStyle: {
+    width: 80,
+    height: 80,
+    marginLeft: 20,
   },
-  boxStyle:{
-    flexDirection:'row',
-    marginTop:30,
-    marginLeft:15,
-    marginRight:15,
-    justifyContent:'space-around'
+  boxStyle: {
+    flexDirection: 'row',
+    marginTop: 30,
+    marginLeft: 15,
+    marginRight: 15,
+    justifyContent: 'space-around'
+  },
+  toRight: {
+    alignItems: 'flex-end',
+    marginRight: 20,
   },
   space: {
     height: 20, // Add desired space height
@@ -71,6 +84,6 @@ export const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     fontSize: 14,
-    marginTop: 5,
+    marginLeft: 20,
   },
 });

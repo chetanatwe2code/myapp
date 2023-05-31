@@ -9,6 +9,7 @@ import Home from '../../screen/Home';
 import Login from '../../screen/auth/Login';
 import Signup from '../../screen/auth/Signup';
 import Verification from '../../screen/auth/Verification';
+import Forgot from '../../screen/auth/Forgot';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -46,6 +47,7 @@ function ApplicationNavigator() {
             <Stack.Navigator initialRouteName={isLoggedIn ? 'Home' : 'Login'} >
                 <Stack.Screen name="Home" component={Home} />
                 <Stack.Screen name="Login" component={Login} options={{ headerShown: false }}/>
+                <Stack.Screen name="Forgot" component={Forgot} options={{ headerShown: false }}/>
                 <Stack.Screen name="Verification" component={Verification} options={{ headerShown: false }}/>
                 <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
                 <Stack.Screen name="About" component={About} />

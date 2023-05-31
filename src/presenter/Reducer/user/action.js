@@ -3,7 +3,9 @@ import {UserConstants,RequestConstant,ResponseConstant} from "./UserConstants";
 export const UserAction = {
     signIn,
     signUp,
-    verifyOTP
+    verifyOTP,
+    forgotPassword,
+    changeForgotPassword
 };
 
 const BASE_URL = "https://nursery-live-1.onrender.com/";
@@ -76,6 +78,60 @@ function verifyOTP(body) {
       
             const result = await response.json();
             console.log(`MY_Responce_result:: ${result}`);
+            dispatch(ResponseConstant(UserConstants.SIGNUP_SUCCESS, UserConstants.SIGNUP_FAILURE, result));
+            return result;
+
+          } catch (error) {
+            console.log(`MY_Responce_error:: ${error}`);
+            dispatch(ResponseConstant(UserConstants.SIGNUP_SUCCESS, UserConstants.SIGNUP_FAILURE, error));
+            return error;
+          }
+    };
+}
+
+
+function forgotPassword(body) {
+  console.log(JSON.stringify(body));
+    return async dispatch => {
+        dispatch(RequestConstant(UserConstants.SIGNUP_REQUEST, body));
+        try {
+            const response = await fetch(BASE_URL+"user_forgate_password", {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(body)
+            });
+      
+            const result = await response.json();
+            console.log(`MY_Responce_result:: ${result}`);
+            dispatch(ResponseConstant(UserConstants.SIGNUP_SUCCESS, UserConstants.SIGNUP_FAILURE, result));
+            return result;
+
+          } catch (error) {
+            console.log(`MY_Responce_error:: ${error}`);
+            dispatch(ResponseConstant(UserConstants.SIGNUP_SUCCESS, UserConstants.SIGNUP_FAILURE, error));
+            return error;
+          }
+    };
+}
+
+function changeForgotPassword(body,token) {
+  console.log(JSON.stringify(body));
+    return async dispatch => {
+        dispatch(RequestConstant(UserConstants.SIGNUP_REQUEST, body));
+        try {
+            const response = await fetch(BASE_URL+"user_forgate_password_update", {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'user_token': token,
+              },
+              body: JSON.stringify(body)
+            });
+      
+            const result = await response.json();
+            console.log(`MY_Responce_result:: ${JSON.stringify(result)}`);
             dispatch(ResponseConstant(UserConstants.SIGNUP_SUCCESS, UserConstants.SIGNUP_FAILURE, result));
             return result;
 
