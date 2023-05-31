@@ -6,8 +6,7 @@ import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { UserAction } from "../../presenter/Reducer/user/action";
-import { useDispatch, useSelector } from 'react-redux';
+import { AuthService } from "../../presenter/auth/AuthService";
 import { CommonActions } from '@react-navigation/native';
 import { styles } from '../../css/AuthStyles';
 
@@ -19,7 +18,6 @@ function Forgot() {
     const [VisibleOTP, setVisibleOTP] = useState(false)
     const [VisiblePassword, setVisiblePassword] = useState(false)
 
-    const dispatch = useDispatch();
     const navigation = useNavigation();
 
     const [otpError, setOTPError] = useState('');
@@ -50,9 +48,9 @@ function Forgot() {
             return;
         }
 
-        dispatch(UserAction.forgotPassword({
+        AuthService.forgotPassword({
             "email": email,
-        })).then((response) => {
+        }).then((response) => {
             if (response.status == true) {
                 setVisibleOTP(true);
             } else {
@@ -81,10 +79,10 @@ function Forgot() {
             return;
         }
 
-        dispatch(UserAction.changeForgotPassword({
+        AuthService.changeForgotPassword({
             "password": password,
             'user_token': token
-        },)).then((response) => {
+        },).then((response) => {
             if (response.success == true) {
                 navigation.dispatch(
                     CommonActions.reset({
@@ -118,10 +116,10 @@ function Forgot() {
             return;
         }
 
-        dispatch(UserAction.verifyOTP({
+        AuthService.verifyOTP({
             "otp": otp,
             "email": email,
-        })).then((response) => {
+        }).then((response) => {
             if (response.status == true || response.success) {
                 setToken(response.token);
                 setVisiblePassword(true);
@@ -134,25 +132,25 @@ function Forgot() {
         });
     };
 
-    // After successful login
-    const saveSignupData = async (token, navigation) => {
-        try {
-            await AsyncStorage.setItem('token', token);
-            // Any other data you want to store
-            console.log('Login data saved successfully');
-            //  navigation.navigate('Home');
-            navigation.dispatch(
-                CommonActions.reset({
-                    index: 0,
-                    routes: [
-                        { name: 'Home' },
-                    ],
-                })
-            );
-        } catch (error) {
-            console.log('Error saving login data:', error);
-        }
-    };
+    // // After successful login
+    // const saveSignupData = async (token, navigation) => {
+    //     try {
+    //         await AsyncStorage.setItem('token', token);
+    //         // Any other data you want to store
+    //         console.log('Login data saved successfully');
+    //         //  navigation.navigate('Home');
+    //         navigation.dispatch(
+    //             CommonActions.reset({
+    //                 index: 0,
+    //                 routes: [
+    //                     { name: 'Home' },
+    //                 ],
+    //             })
+    //         );
+    //     } catch (error) {
+    //         console.log('Error saving login data:', error);
+    //     }
+    // };
 
     return (
         <View style={styles.loginContainer}>

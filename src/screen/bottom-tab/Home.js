@@ -4,6 +4,8 @@ import { NativeBaseProvider, List, ListItem, Text, Box } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { useSelector } from "react-redux";
+
 const getLoginData = async () => {
 try {
   const token = await AsyncStorage.getItem('token');
@@ -18,6 +20,10 @@ try {
 
 
 const Home = () => {
+  const user_data = useSelector(state => state.data);
+
+  console.warn(user_data);
+
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -36,16 +42,16 @@ const Home = () => {
   const navigation = useNavigation();
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Box>
+    <View >
+      {/* <Box>
         {data.map((item) => (
           <Box key={item.id} py={2}>
             <Text>{item.title}</Text>
           </Box>
         ))}
-      </Box>
+      </Box> */}
 
-      <Button title="Go to About" onPress={() => navigation.navigate('About', { data })} />
+      {/* <Button title="Go to About" onPress={() => navigation.navigate('About', { data })} /> */}
       
     </View>
   );

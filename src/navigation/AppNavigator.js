@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { Button, View,ActivityIndicator } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 const Stack = createStackNavigator();
 
-import About from '../../screen/About';
-import Home from '../../screen/Home';
-import Login from '../../screen/auth/Login';
-import Signup from '../../screen/auth/Signup';
-import Verification from '../../screen/auth/Verification';
-import Forgot from '../../screen/auth/Forgot';
+import About from '../screen/About';
+import Login from '../screen/auth/Login';
+import Signup from '../screen/auth/Signup';
+import Verification from '../screen/auth/Verification';
+import Forgot from '../screen/auth/Forgot';
+import BaseNavigator from './BaseNavigator';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -25,8 +25,8 @@ function ApplicationNavigator() {
     
       const checkLoginStatus = async () => {
         try {
-            setIsLoggedIn(false);
-            return;
+            // setIsLoggedIn(false);
+            // return;
           const token = await AsyncStorage.getItem('token');
           setIsLoggedIn(token !== null && token !== '');
         } catch (error) {
@@ -44,8 +44,8 @@ function ApplicationNavigator() {
 
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName={isLoggedIn ? 'Home' : 'Login'} >
-                <Stack.Screen name="Home" component={Home} />
+            <Stack.Navigator initialRouteName={isLoggedIn ? 'Base' : 'Login'} >
+                <Stack.Screen name="Base" component={BaseNavigator} options={{ headerShown: false }}/>
                 <Stack.Screen name="Login" component={Login} options={{ headerShown: false }}/>
                 <Stack.Screen name="Forgot" component={Forgot} options={{ headerShown: false }}/>
                 <Stack.Screen name="Verification" component={Verification} options={{ headerShown: false }}/>
