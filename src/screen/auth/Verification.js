@@ -6,8 +6,7 @@ import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { UserAction } from "../../presenter/Reducer/user/action";
-import { useDispatch, useSelector } from 'react-redux';
+import { AuthService } from "../../presenter/auth/AuthService";
 import { useRoute, CommonActions } from '@react-navigation/native';
 import { styles } from '../../css/AuthStyles';
 
@@ -17,7 +16,6 @@ function Verification() {
   const user_email = route.params.email;
   const email_otp = route.params.otp;
 
-  const dispatch = useDispatch();
   const navigation = useNavigation();
 
   const [otpError, setOTPError] = useState('');
@@ -45,10 +43,10 @@ function Verification() {
       return;
     }
 
-    dispatch(UserAction.verifyOTP({
+    AuthService.verifyOTP({
       "otp": otp,
       "email": email,
-    })).then((response) => {
+    }).then((response) => {
       if (response.status == true || response.success) {
         setApiError(`token:: ${response.token}`);
         saveSignupData(response.token, navigation);
@@ -70,7 +68,7 @@ function Verification() {
         CommonActions.reset({
           index: 0,
           routes: [
-            { name: 'Home' },
+            { name: 'Base' },
           ],
         })
       );

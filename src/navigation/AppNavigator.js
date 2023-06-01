@@ -1,22 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { Button, View,ActivityIndicator } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 const Stack = createStackNavigator();
 
-import About from '../../screen/About';
-import Home from '../../screen/Home';
-import Login from '../../screen/auth/Login';
-import Signup from '../../screen/auth/Signup';
-import Verification from '../../screen/auth/Verification';
-import Forgot from '../../screen/auth/Forgot';
+import About from '../screen/About';
+import Login from '../screen/auth/Login';
+import Signup from '../screen/auth/Signup';
+import Verification from '../screen/auth/Verification';
+import Forgot from '../screen/auth/Forgot';
+import BottomTabNavigator from './BottomTabNavigator';
+import { useDispatch } from "react-redux";
+//import DrawerNavigator from './DrawerNavigator';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { update_token } from '../presenter/user/Action';
 
 /// if user logged in then i need to initialRouteName is Home so how can do this
 function ApplicationNavigator() {
+
+    const dispatch = useDispatch();
+
     const [isLoading, setIsLoading] = useState(true);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [token, setToken] = useState('');
 
 
     useEffect(() => {
@@ -25,9 +32,10 @@ function ApplicationNavigator() {
     
       const checkLoginStatus = async () => {
         try {
-            setIsLoggedIn(false);
-            return;
+            // setIsLoggedIn(false);
+            // return;
           const token = await AsyncStorage.getItem('token');
+          setToken(token);
           setIsLoggedIn(token !== null && token !== '');
         } catch (error) {
           console.error('Error retrieving login data:', error);
@@ -42,10 +50,14 @@ function ApplicationNavigator() {
         );
       }
 
+      if(isLoggedIn){
+        dispatch(update_token(token));
+      }
+
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName={isLoggedIn ? 'Home' : 'Login'} >
-                <Stack.Screen name="Home" component={Home} />
+            <Stack.Navigator initialRouteName={isLoggedIn ? 'Base' : 'Login'} >
+                <Stack.Screen name="Base" component={BottomTabNavigator} options={{ headerShown: false }}/>
                 <Stack.Screen name="Login" component={Login} options={{ headerShown: false }}/>
                 <Stack.Screen name="Forgot" component={Forgot} options={{ headerShown: false }}/>
                 <Stack.Screen name="Verification" component={Verification} options={{ headerShown: false }}/>

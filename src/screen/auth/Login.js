@@ -1,27 +1,26 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { Input, NativeBaseProvider, Button, Icon, Box, Image, AspectRatio } from 'native-base';
+import { Input, NativeBaseProvider, Button, Icon, HStack, Spinner, Heading } from 'native-base';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { UserAction } from "../../presenter/Reducer/user/action";
-import { useDispatch, useSelector } from 'react-redux';
+import { AuthService } from "../../presenter/auth/AuthService";
 import { CommonActions } from '@react-navigation/native';
 import { styles } from '../../css/AuthStyles';
 
 function Login() {
-  const dispatch = useDispatch();
   const navigation = useNavigation();
+
+  const [loginProcess, setloginProcess] = useState(false);
 
   const [usernameError, setUsernameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [apiError, setApiError] = useState('');
 
-
-
   const [username, setUsername] = useState('chetan.barod.we2code@gmail.com');
+  //const [username, setUsername] = useState('chtnbarod@gmail.com');
   const [password, setPassword] = useState('12345@abcd');
 
   const onSubmit = async => {
@@ -41,10 +40,14 @@ function Login() {
       return;
     }
 
-    dispatch(UserAction.signIn({ "email": username, "password": password })).then((response) => {
+    setloginProcess(true);
+
+    AuthService.signIn({ "email": username, "password": password }).then((response) => {
       if (response.res_code == '001') {
+        setloginProcess(false);
         saveLoginData(response.token, navigation);
       } else {
+        setloginProcess(false);
         setApiError('Your login credentials do not match');
         console.log(`MY_Responce:: Your login credentials do not match`);
       }
@@ -54,7 +57,6 @@ function Login() {
   return (
     <View style={styles.loginContainer}>
       <View style={styles.formContainer}>
-
         <View style={styles.Middle}>
           <Text style={styles.LoginText}>Login</Text>
         </View>
@@ -141,12 +143,28 @@ function Login() {
         {apiError !== '' && <Text style={styles.errorText}>{apiError}</Text>}
 
         {/* Button */}
+       
         <View style={styles.buttonStyle}>
-          <Button onPress={() => {
-            onSubmit();
-          }} style={styles.buttonDesign}>
-            LOGIN
-          </Button>
+
+        {
+          loginProcess ? (
+            
+              <HStack space={5} justifyContent="center">
+              <Spinner accessibilityLabel="Loading posts" />
+              <Heading color="primary.500" fontSize="md">
+                Login
+              </Heading>
+            </HStack>
+          ) : (
+            <Button onPress={() => {
+               
+               onSubmit();
+            }} style={styles.buttonDesign}>
+              LOGIN
+            </Button>
+          )
+        }
+      
 
         </View>
 
@@ -183,7 +201,7 @@ const saveLoginData = async (token, navigation) => {
       CommonActions.reset({
         index: 0,
         routes: [
-          { name: 'Home' },
+          { name: 'Base' },
         ],
       })
     );

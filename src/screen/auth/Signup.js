@@ -1,16 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { Input, NativeBaseProvider, Button, Icon, Box, Image, AspectRatio, ScrollView } from 'native-base';
+import { Input, NativeBaseProvider, Button, Icon,  HStack, Spinner, Heading } from 'native-base';
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
-import { UserAction } from "../../presenter/Reducer/user/action";
+import { AuthService } from "../../presenter/auth/AuthService";
 import { styles } from '../../css/AuthStyles';
 
 
 function Signup() {
-  const dispatch = useDispatch();
   const navigation = useNavigation();
 
   const [nameError, setNameError] = useState('');
@@ -24,9 +22,12 @@ function Signup() {
   const [password, setPassword] = useState('12345@abcd');
   const [confirmPassword, setConfirmPassword] = useState('12345@abcd');
 
+  const [signUpProcess, setSignUpProcess] = useState(false);
+
   const onSubmit = async => {
     // navigation.navigate("Verification", { email: email,'otp' : '12345' });
     // return;
+    
     setNameError('');
     setEmailError('');
     setPasswordError('');
@@ -54,11 +55,14 @@ function Signup() {
       return;
     }
 
-    dispatch(UserAction.signUp({
+    setSignUpProcess(true);
+
+    AuthService.signUp({
       "name": name,
       "email": email,
       "password": password
-    })).then((response) => {
+    }).then((response) => {
+      setSignUpProcess(false);
       if (response.res_code == '001') {
         navigation.navigate("Verification", { email: email, 'otp': response.otp });
         setApiError(`${response.res_code}`);
@@ -222,13 +226,31 @@ function Signup() {
         {apiError !== '' && <Text style={styles.errorText}>{apiError}</Text>}
 
         {/* Button */}
-        <View style={styles.buttonStyle}>
+        {/* <View style={styles.buttonStyle}>
           <Button onPress={() => {
             onSubmit();
           }} style={styles.buttonDesign}>
-            REGISTER NOW
+            
           </Button>
-        </View>
+        </View> */}
+
+        {
+          signUpProcess ? (
+            
+              <HStack space={5} justifyContent="center">
+              <Spinner accessibilityLabel="Loading posts" />
+              <Heading color="primary.500" fontSize="md">
+                In-Process
+              </Heading>
+            </HStack>
+          ) : (
+            <Button onPress={() => {
+               onSubmit();
+            }} style={styles.buttonDesign}>
+              REGISTER NOW
+            </Button>
+          )
+        }
 
         {/* Line */}
         <View style={styles.lineStyle}>
