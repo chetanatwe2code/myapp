@@ -9,6 +9,8 @@ import Login from '../screen/auth/Login';
 import Signup from '../screen/auth/Signup';
 import Verification from '../screen/auth/Verification';
 import Forgot from '../screen/auth/Forgot';
+import AddProduct from '../screen/product/add-product/AddProduct';
+import Test from '../screen/Test';
 import BottomTabNavigator from './BottomTabNavigator';
 import { useDispatch } from "react-redux";
 //import DrawerNavigator from './DrawerNavigator';
@@ -63,6 +65,8 @@ function ApplicationNavigator() {
                 <Stack.Screen name="Verification" component={Verification} options={{ headerShown: false }}/>
                 <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
                 <Stack.Screen name="About" component={About} />
+                <Stack.Screen name="AddProduct" component={AddProduct} />
+                <Stack.Screen name="Test" component={Test} />
             </Stack.Navigator>
         </NavigationContainer>
     );

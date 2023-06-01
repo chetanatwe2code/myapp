@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, View } from 'react-native';
+import { Button, View, TouchableOpacity } from 'react-native';
 import { NativeBaseProvider, Text, Box, HStack, Grid } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -86,23 +86,23 @@ const Home = () => {
     }}>
 
       <HStack>
-        <OrderTypeButton onPress={()=> {
+        <OrderTypeButton onPress={() => {
 
         }}
-        title='Received' count="20"></OrderTypeButton>
-        <OrderTypeButton onPress={()=> {
-          
-        }}  title='Ready To Ship' count="10"></OrderTypeButton>
+          title='Received' count="20"></OrderTypeButton>
+        <OrderTypeButton onPress={() => {
+
+        }} title='Ready To Ship' count="10"></OrderTypeButton>
       </HStack>
 
       <HStack style={{ marginTop: 10 }}>
-        <OrderTypeButton onPress={()=> {
+        <OrderTypeButton onPress={() => {
 
         }}
-        title='Delivered' count="5"></OrderTypeButton>
-        <OrderTypeButton onPress={()=> {
-          
-        }}  title='Rejected' count="10"></OrderTypeButton>
+          title='Delivered' count="5"></OrderTypeButton>
+        <OrderTypeButton onPress={() => {
+
+        }} title='Rejected' count="10"></OrderTypeButton>
       </HStack>
 
 
@@ -110,18 +110,26 @@ const Home = () => {
 
       <FlatList
         data={data}
+        // onPress={()=> {
+        //   console.log('onPress');
+        //   //
+        // }}
         renderItem={({ item }) => (
-          <View
-            style={styles.boxStyle}>
-            <Box key={item.id} py={2}>
-              <Image
-                style={styles.imageStyle}
-                source={{ uri: item.cover_image }}
-              />
-              <Text>{item.name}</Text>
-              <Text>price:{item.price}</Text>
-            </Box>
-          </View>
+          <TouchableOpacity 
+          style={styles.boxStyle}
+          onPress={()=>{
+            navigation.navigate("AddProduct", { product : {productId: item.id, productName: item.name, productBrand: item.brand, productCategory: item.category, productDescription: item.description} });
+          }}>
+               <Box key={item.id} py={2}>
+                <Image
+                  style={styles.imageStyle}
+                  source={{ uri: item.cover_image }}
+                />
+                <Text>{item.name}</Text>
+                <Text>price:{item.price}</Text>
+              </Box>
+          </TouchableOpacity>
+
         )}
         //Setting the number of column
         numColumns={3}

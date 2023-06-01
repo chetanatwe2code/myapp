@@ -1,4 +1,4 @@
-export const BASE_URL = "https://vercel-deploye-test-nursery.onrender.com/";
+export const BASE_URL = "http://192.168.29.108:9999/";
 //export const BASE_URL = "https://nursery-live-1.onrender.com/";
 export const USER_LOGIN = `${BASE_URL}vendor_login`;
 export const USER_SIGNUP = `${BASE_URL}vendor_signup`;

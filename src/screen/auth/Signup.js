@@ -6,65 +6,55 @@ import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { AuthService } from "../../presenter/auth/AuthService";
 import { styles } from '../../css/AuthStyles';
+import useValidation from '../../util/Validator';
+
+
 
 
 function Signup() {
   const navigation = useNavigation();
 
-  const [nameError, setNameError] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const [confirmPasswordError, setConfirmPasswordError] = useState('');
+  const validators = {
+    name: [(value) => (value.trim() ? null : 'Name is required')],
+    email: [
+      (value) => (value.trim() ? null : 'Email is required'),
+      (value) =>
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? null : 'Invalid email format',
+    ],
+    password: [
+      (value) => (value.trim() ? null : 'Password is required'),
+      (value) => (value.trim().length >= 8 ? null : 'Password must be at least 8 characters long'),
+    ],
+    confirmPassword: [
+      (value) => (value.trim() ? null : 'Confirm Password is required'),
+      (value) => (value.trim().length >= 8 ? null : 'Confirm Password must be at least 8 characters long'),
+      (value) => (value === state.password ? null : 'Confirm Password must be same as Password'),
+    ],
+  };
+
+  const { state, onInputChange, errors, validate } = useValidation(
+    //{ name : "" , email: ' ', password: '' , confirmPassword: '' },
+    { name : "Chetan" , email: 'chetan.barod.we2code@gmail.com', password: '12345@abcd' , confirmPassword: '12345@abcd' },
+    validators
+  );
+
   const [apiError, setApiError] = useState('');
-
-  const [name, setName] = useState('Chetan');
-  const [email, setEmail] = useState('Chetan.barod.we2code@gmail.com');
-  const [password, setPassword] = useState('12345@abcd');
-  const [confirmPassword, setConfirmPassword] = useState('12345@abcd');
-
   const [signUpProcess, setSignUpProcess] = useState(false);
 
-  const onSubmit = async => {
-    // navigation.navigate("Verification", { email: email,'otp' : '12345' });
-    // return;
-    
-    setNameError('');
-    setEmailError('');
-    setPasswordError('');
-    setConfirmPasswordError('');
+  const onSubmit = () => {
+  
     setApiError('');
-
-    // Validate the input fields
-    if (name.trim() === '') {
-      setNameError('Email is required');
-      return;
-    }
-
-    if (email.trim() === '') {
-      setEmailError('Email is required');
-      return;
-    }
-
-    if (password.trim() === '') {
-      setPasswordError('Password is required');
-      return;
-    }
-
-    if (confirmPassword.trim() === '') {
-      setConfirmPasswordError('Password is required');
-      return;
-    }
-
+    if (!validate()) return;
     setSignUpProcess(true);
 
     AuthService.signUp({
-      "name": name,
-      "email": email,
-      "password": password
+      "name": state.name,
+      "email": state.email,
+      "password": state.password
     }).then((response) => {
       setSignUpProcess(false);
       if (response.res_code == '001') {
-        navigation.navigate("Verification", { email: email, 'otp': response.otp });
+        navigation.navigate("Verification", { email: state.email, 'otp': response.otp });
         setApiError(`${response.res_code}`);
       } else {
         setApiError(`${response.response}`);
@@ -85,8 +75,8 @@ function Signup() {
 
           <View style={styles.emailInput}>
             <Input
-              value={name}
-              onChangeText={(text) => setName(text)}
+              value={state.name}
+              onChangeText={(value) => onInputChange('name', value)}
               InputLeftElement={
                 <Icon
                   as={<FontAwesome5 name="user-secret" />}
@@ -112,7 +102,7 @@ function Signup() {
             />
           </View>
           {/* Display confirmPasswordError error message */}
-          {nameError !== '' && <Text style={styles.errorText}>{nameError}</Text>}
+          {errors.name && <Text style={styles.errorText}>{errors.name[0]}</Text>}
         </View>
 
         {/* Username or Email Input Field */}
@@ -120,8 +110,8 @@ function Signup() {
 
           <View style={styles.emailInput}>
             <Input
-              value={email}
-              onChangeText={(text) => setEmail(text)}
+              value={state.email}
+              onChangeText={(value) => onInputChange('email', value)}
               InputLeftElement={
                 <Icon
                   as={<MaterialCommunityIcons name="email" />}
@@ -147,7 +137,7 @@ function Signup() {
             />
           </View>
           {/* Display confirmPasswordError error message */}
-          {emailError !== '' && <Text style={styles.errorText}>{emailError}</Text>}
+          {errors.email && <Text style={styles.errorText}>{errors.email[0]}</Text>}
         </View>
 
         {/* Password Input Field */}
@@ -155,8 +145,8 @@ function Signup() {
 
           <View style={styles.emailInput}>
             <Input
-              value={password}
-              onChangeText={(text) => setPassword(text)}
+              value={state.password}
+              onChangeText={(value) => onInputChange('password', value)}
               InputLeftElement={
                 <Icon
                   as={<FontAwesome5 name="key" />}
@@ -182,7 +172,7 @@ function Signup() {
             />
           </View>
           {/* Display confirmPasswordError error message */}
-          {passwordError !== '' && <Text style={styles.errorText}>{passwordError}</Text>}
+          {errors.password && <Text style={styles.errorText}>{errors.password[0]}</Text>}
         </View>
 
         {/* Password Input Field */}
@@ -190,8 +180,8 @@ function Signup() {
 
           <View style={styles.emailInput}>
             <Input
-              value={confirmPassword}
-              onChangeText={(text) => setConfirmPassword(text)}
+              value={state.confirmPassword}
+              onChangeText={(value) => onInputChange('confirmPassword', value)}
               InputLeftElement={
                 <Icon
                   as={<FontAwesome5 name="key" />}
@@ -217,7 +207,7 @@ function Signup() {
             />
           </View>
           {/* Display confirmPasswordError error message */}
-          {confirmPasswordError !== '' && <Text style={styles.errorText}>{confirmPasswordError}</Text>}
+          {errors.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword[0]}</Text>}
         </View>
 
         <View style={styles.space}></View>

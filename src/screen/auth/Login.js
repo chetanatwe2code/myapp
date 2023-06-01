@@ -9,40 +9,39 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthService } from "../../presenter/auth/AuthService";
 import { CommonActions } from '@react-navigation/native';
 import { styles } from '../../css/AuthStyles';
+import useValidation from '../../util/Validator';
+
+// Define your validation functions
+const validators = {
+  email: [
+    (value) => (value.trim() ? null : 'Email is required'),
+    (value) =>
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? null : 'Invalid email format',
+  ],
+  password: [
+    (value) => (value.trim() ? null : 'Password is required'),
+    (value) => (value.trim().length >= 8 ? null : 'Password must be at least 8 characters long'),
+  ],
+};
 
 function Login() {
   const navigation = useNavigation();
 
   const [loginProcess, setloginProcess] = useState(false);
-
-  const [usernameError, setUsernameError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
   const [apiError, setApiError] = useState('');
 
-  const [username, setUsername] = useState('chetan.barod.we2code@gmail.com');
-  //const [username, setUsername] = useState('chtnbarod@gmail.com');
-  const [password, setPassword] = useState('12345@abcd');
+  const { state, onInputChange, errors, validate } = useValidation(
+    { email: 'chetan.barod.we2code@gmail.com', password: '12345@abcd' },
+    validators
+  );
 
-  const onSubmit = async => {
+  const onSubmit = () => {
 
-    setUsernameError('');
-    setPasswordError('');
     setApiError('');
-
-    // Validate the input fields
-    if (username.trim() === '') {
-      setUsernameError('Username or Email is required');
-      return;
-    }
-
-    if (password.trim() === '') {
-      setPasswordError('Password is required');
-      return;
-    }
-
+    if (!validate()) return;
     setloginProcess(true);
 
-    AuthService.signIn({ "email": username, "password": password }).then((response) => {
+    AuthService.signIn({ "email": state.email, "password": state.password }).then((response) => {
       if (response.res_code == '001') {
         setloginProcess(false);
         saveLoginData(response.token, navigation);
@@ -66,8 +65,8 @@ function Login() {
 
           <View style={styles.emailInput}>
             <Input
-              value={username}
-              onChangeText={(text) => setUsername(text)}
+              value={state.email}
+              onChangeText={(value) => onInputChange('email', value)}
               InputLeftElement={
                 <Icon
                   as={<FontAwesome5 name="user-secret" />}
@@ -92,8 +91,8 @@ function Login() {
 
             />
           </View>
-          {/* Display username error message */}
-          {usernameError !== '' && <Text style={styles.errorText}>{usernameError}</Text>}
+
+          {errors.email && <Text style={styles.errorText}>{errors.email[0]}</Text>}
         </View>
 
         {/* Password view */}
@@ -101,8 +100,8 @@ function Login() {
 
           <View style={styles.emailInput}>
             <Input
-              value={password}
-              onChangeText={(text) => setPassword(text)}
+              value={state.password}
+              onChangeText={(value) => onInputChange('password', value)}
               InputLeftElement={
                 <Icon
                   as={<FontAwesome5 name="key" />}
@@ -128,7 +127,7 @@ function Login() {
             />
           </View>
           {/* Display password error message */}
-          {passwordError !== '' && <Text style={styles.errorText}>{passwordError}</Text>}
+          {errors.password && <Text style={styles.errorText}>{errors.password[0]}</Text>}
         </View>
 
         <View style={styles.space}></View>

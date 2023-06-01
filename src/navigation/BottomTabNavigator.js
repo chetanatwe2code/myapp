@@ -8,10 +8,10 @@ const Tab = createBottomTabNavigator();
 
 export default () => {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator> 
       <Tab.Screen name="Home" component={Home} />
        <Tab.Screen name="Add-Product" component={AddProduct} />
-      <Tab.Screen name="Account" component={Account} />
+       <Tab.Screen name="Account" component={Account} />
     </Tab.Navigator>
   );
 };
